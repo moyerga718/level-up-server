@@ -19,8 +19,11 @@ class GameView(ViewSet):
         """
 
         try:
+            #GET ONE GAME OBJECT THAT MATCHES ID YOU GIVE IT
             game = Game.objects.get(pk=pk)
+            #PASS THAT INTO THE GAME SERIALIZER WHICH CONVERTS DB DATA INTO JSON
             serializer = GameSerializer(game)
+            #RETURN SERIALIZED JSON DATA TO CLIENT
             return Response(serializer.data)
         except Game.DoesNotExist as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND) 
@@ -79,6 +82,12 @@ class GameView(ViewSet):
         game.save()
     
         return Response(None, status=status.HTTP_204_NO_CONTENT)
+
+    def destroy(self, request, pk):
+        game = Game.objects.get(pk=pk)
+        game.delete()
+        return Response(None, status=status.HTTP_204_NO_CONTENT)
+        
 
 
 class GameSerializer(serializers.ModelSerializer):
